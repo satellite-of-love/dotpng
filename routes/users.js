@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const { spawn } = require('child_process');
+const {spawn} = require('child_process');
 var sha1 = require('./sha');
 var fs = require('fs');
 
@@ -8,27 +8,39 @@ var fs = require('fs');
 
 /* GET users listing. */
 router.post('/png', function (req, res, next) {
-  const dot = req.body;
-  console.log("Body is: " + req.body);
+    const dot = req.body;
+    console.log("Body is: " + req.body);
 
-  if (!req.body) {
-    throw new Error("No body seen on request. Set content type to text/plain and send DOT")
-  }
-  const shaOfData = sha1(dot);
+    if (!req.body) {
+        throw new Error("No body seen on request. Set content type to text/plain and send DOT")
+    }
+    const shaOfData = sha1(dot);
 
-  const filename = "public/images/" + shaOfData + ".png";
+    const filename = "public/images/" + shaOfData + ".png";
+    const urlToFile = "images/" + shaOfData + ".png";
 
-  if (fs.existsSync(filename)) {
-    return res.redirect(filename);
-  }
+    if (fs.existsSync(filename)) {
+        console.log("already exists: " + filename);
+        return res.redirect(urlToFile);
+    }
 
-  const cp = spawn("dot", ["-Tpng", "-o", filename]);
-  cp.stdin.write(dot);
-  cp.stdin.end();
-  cp.stdout.on("data", function(data) { console.log("stdout: " + data)});
-  cp.on("exit", function(code, signal) {
-      res.redirect(filename);
-  });
+    const cp = spawn("dot", ["-Tpng", "-o", filename]);
+    cp.stdin.write(dot);
+    cp.stdin.end();
+    cp.stdout.on("data", function (data) {
+        console.log("stdout: " + data)
+    });
+    var stderr="";
+    cp.stderr.on("data", function (data) {
+        stderr = stderr + data;
+    });
+    cp.on("exit", function (code, signal) {
+        if (code !== 0) {
+            res.status(500).send("Failure running dot: " + stderr);
+            return;
+        }
+        res.redirect(urlToFile);
+    });
 });
 
 module.exports = router;
