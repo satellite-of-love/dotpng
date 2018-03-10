@@ -21,7 +21,7 @@ router.post('/png', function (req, res, next) {
 
     if (fs.existsSync(filename)) {
         console.log("already exists: " + filename);
-        return res.redirect(urlToFile);
+        return res.json({ goalGraphUrl: urlToFile, cached: true });
     }
 
     const cp = spawn("dot", ["-Tpng", "-o", filename]);
@@ -39,7 +39,7 @@ router.post('/png', function (req, res, next) {
             res.status(500).send("Failure running dot: " + stderr);
             return;
         }
-        res.redirect(urlToFile);
+        res.json({ goalGraphUrl: urlToFile, cached: true });
     });
 });
 
