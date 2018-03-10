@@ -6,6 +6,7 @@ const { spawn } = require('child_process');
 
 /* GET users listing. */
 router.post('/png', function (req, res, next) {
+  console.log("Body is: " + req.body);
   res.send('Data is: ' + JSON.stringify(req.body) + "\n");
 });
 
