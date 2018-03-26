@@ -24,10 +24,15 @@ router.post('/png', function (req, res, next) {
         console.log("already exists: " + filename);
         return res.json({ goalGraphUrl: urlToFile, cached: true });
     }
+    console.log("No file found. Generating one with `dot`");
     try {
         const cp = spawn("dot", ["-Tpng", "-o", filename]);
+        if (!cp) {
+            console.log("Wtf happened to spawn!");
+        }
         cp.stdin.write(dot);
         cp.stdin.end();
+        console.log("Wrote to stdin");
         cp.stdout.on("data", function (data) {
             console.log("stdout: " + data)
         });
