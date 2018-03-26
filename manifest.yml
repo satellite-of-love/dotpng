@@ -1,10 +1,9 @@
 ---
 applications:
-- name: "dotpngx"
+- name: "dotpng"
   memory: 512M
+  command: "node --trace-warnings --expose_gc --optimize_for_size --always_compact --max_old_space_size=384 ./bin/www"
   instances: 1
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
-  routes:
-    - route: dotpng.atomist.io
   env:
     ATOMIST_TEAMS: T1JVCMVH7
