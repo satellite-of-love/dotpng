@@ -6,4 +6,4 @@ applications:
   instances: 1
   buildpack: https://github.com/cloudfoundry/nodejs-buildpack
   env:
-    ATOMIST_TEAMS: T1JVCMVH7
+    OPTIMIZE_MEMORY: true
