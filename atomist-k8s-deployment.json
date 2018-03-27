@@ -1,0 +1,96 @@
+{
+  "apiVersion": "extensions/v1beta1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "dotpng",
+    "labels": {
+      "app": "dotpng",
+      "owner": "satellite-of-love",
+      "teamId": "T1JVCMVH7",
+      "creator": "atomist.k8-automation"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "revisionHistoryLimit": 3,
+    "selector": {
+      "matchLabels": {
+        "app": "dotpng",
+        "owner": "satellite-of-love",
+        "teamId": "T1JVCMVH7"
+      }
+    },
+    "template": {
+      "metadata": {
+        "name": "dotpng",
+        "labels": {
+          "app": "dotpng",
+          "owner": "satellite-of-love",
+          "teamId": "T1JVCMVH7",
+          "creator": "atomist.k8-automation"
+        },
+        "annotations": {
+          "atomist.com/k8vent": "{\"environment\":\"testing\",\"webhooks\":[\"https://webhook.atomist.com/atomist/kube/teams/T1JVCMVH7\"]}",
+          "atomist.com/repo-image": "[{\"container\":\"dotpng\",\"repo\":{\"owner\":\"satellite-of-love\",\"name\":\"dotpng\"},\"image\":\"image_placeholder\"}]"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "dotpng",
+            "image": "image_placeholder",
+            "imagePullPolicy": "IfNotPresent",
+            "resources": {
+              "limits": {
+                "cpu": "300m",
+                "memory": "384Mi"
+              },
+              "requests": {
+                "cpu": "100m",
+                "memory": "320Mi"
+              }
+            },
+            "readinessProbe": {
+              "httpGet": {
+                "path": "/info",
+                "port": "http",
+                "scheme": "HTTP"
+              },
+              "initialDelaySeconds": 60,
+              "timeoutSeconds": 3,
+              "periodSeconds": 10,
+              "successThreshold": 1,
+              "failureThreshold": 3
+            },
+            "livenessProbe": {
+              "httpGet": {
+                "path": "/health",
+                "port": "http",
+                "scheme": "HTTP"
+              },
+              "initialDelaySeconds": 60,
+              "timeoutSeconds": 3,
+              "periodSeconds": 10,
+              "successThreshold": 1,
+              "failureThreshold": 3
+            },
+            "ports": [
+              {
+                "name": "http",
+                "containerPort": 8080,
+                "protocol": "TCP"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "strategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxUnavailable": 0,
+        "maxSurge": 1
+      }
+    }
+  }
+}
