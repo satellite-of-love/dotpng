@@ -15,7 +15,7 @@ RUN mkdir -p /opt/app
 
 WORKDIR /opt/app
 
-EXPOSE 3000
+EXPOSE 8080
 
 ENV NPM_CONFIG_LOGLEVEL warn
 
