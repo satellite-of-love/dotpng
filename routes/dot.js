@@ -6,7 +6,10 @@ var fs = require('fs');
 
 // curl http://localhost:3000/dot/png -X POST -H "Content-Type: text/plain" -d "digraph Post { la -> ha }"
 
-/* GET users listing. */
+/* 
+* POST
+* make an image and return a URL for fetching that image
+ */
 router.post('/png', function (req, res, next) {
     const dot = req.body;
     console.log("Body is: " + req.body);
